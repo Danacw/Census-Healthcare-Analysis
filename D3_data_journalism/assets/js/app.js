@@ -1,9 +1,4 @@
-////// STEP 1: LOAD DATA FROM CSV //////
-var demData = d3.csv("assets/data/data.csv").then((demData) => {
-    console.log(demData)
-
-
-////// STEP 1: DEFINE CHART AREA //////
+//////////////// STEP 1: DEFINE CHART AREA ////////////////
 
 // // Define SVG dimensions
 var svgWidth = 960;
@@ -11,17 +6,17 @@ var svgHeight = 500;
 
 // // Define the chart's margins as an object
 var margin = {
-    top: 60,
-    right: 60,
-    bottom: 60,
-    left: 60
+  top: 20,
+  right: 40,
+  bottom: 60,
+  left: 100
   };
 
 // // Define dimensions of the chart area
 var chartWidth = svgWidth - margin.left - margin.right;
 var chartHeight = svgHeight - margin.top - margin.bottom;
 
-// // Select body, append SVG area to it, and set its dimensions
+// // Select scatter, append SVG area to it, and set its dimensions
 var svg = d3
   .select("scatter")
   .append("svg")
@@ -33,49 +28,58 @@ var svg = d3
  var chartGroup = svg.append("g")
    .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-////// STEP 3. SET UP ALL PARAMS //////  
+//////////////// STEP 2. IMPORT CSV AND SET UP ALL PARAMS //////////////// 
 
-// // Define initial Params
- let chosenXaxis = "data.poverty";
- let chosenYaxis = "data.healthcare";
+//Load csv
+var demData = d3.csv("assets/data/data.csv").then((demData) => {
+  console.log(demData)
 
 // Define all params
-demData.forEach((data) => {
-    data.obesity = +data.obesity;
-    data.smokes = +data.smokes; 
-    data.healthcare = +data.healthcare;
-    data.poverty = +data.poverty;
-    data.age = +data.age;
-    data.income = +data.income;
-});
+  demData.forEach((data) => {
+      data.obesity = +data.obesity;
+      data.smokes = +data.smokes; 
+      data.healthcare = +data.healthcare;
+      data.poverty = +data.poverty;
+      data.age = +data.age;
+      data.income = +data.income;
+  });
 
 // Define scale functions
-var xScale = d3.scaleLinear()
-  .domain(d3.extent(demData, d => d.poverty))
-  .range([0, chartWidth])
-  .nice();
+  var xLinearScale = d3.scaleLinear()
+    .domain(20, d3.max(demData, d => d.poverty))
+    .range([0, chartWidth])
+    .nice();
 
-  var yScale = d3.scaleLinear()
+  var yLinearScale = d3.scaleLinear()
   .domain([6, d3.max(demData, d => d.healthcare)])
   .range([chartHeight, 0])
   .nice();
 
 // Define axis functions
-var xAxis = d3.axisBottom(xScale);
-var yAxis = d3.axisLeft(yScale);
+  var bottomAxis = d3.axisBottom(xLinearScale);
+  var leftAxis = d3.axisLeft(yLinearScale);
 
-//////STEP 4: APPEND CHART AND DATA //////
+//////////////// STEP 3: APPEND CHART AND DATA ////////////////
 
-//Append an SVG group element and the bottom and left axes to the SVG area 
-chartGroup.append("g")
-  .classed("axis", true)
-  .call(yAxis);
+//Append bottom and left axes to the chart
+  chartGroup.append("g")
+    .call(leftAxis);
 
-chartGroup.append("g")
-  .classed("axis", true)
-  .attr("transform", `translate(0, ${chartHeight})`)
-  .call(xAxis);
-  
+  chartGroup.append("g")
+    .attr("transform", `translate(0, ${chartHeight})`)
+    .call(bottomAxis);
+
+  //Create circles
+  var circlesGroup = chartGroup.selectAll("circle")
+  .data(demData)
+  .enter()
+  .append("circle")
+  .attr("cx", d => xLinearScale(d.poverty))
+  .attr("cy", d => yLinearScale(d.healthcare))
+  .attr("r", "15")
+  .attr("stroke-width", "1")
+  .classed("stateCircle", true)
+  .attr("opacity", 0.75);
 });
 
 
