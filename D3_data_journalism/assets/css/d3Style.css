@@ -50,7 +50,19 @@
     text-transform: capitalize;
     background: rgba(0, 0, 0, 0.8);
     border-radius: 4px;
+    position: relative;
   }
+
+  /* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  content: "";
+  position: absolute;
+  bottom: -150px;
+  left: 50px;
+  border-width: 15px 15px 0;
+  border-color: rgba(0, 0, 0, 0.8);
+  display: block;
+}
   
   /* Mobile Rules */
   @media screen and (max-width: 530px) {
