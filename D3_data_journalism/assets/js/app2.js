@@ -115,8 +115,12 @@ function updateToolTip(chosenXaxis, chosenYaxis, circlesGroup) {
     circlesGroup.call(toolTip);
 
     circlesGroup
-    .on('mouseover', toolTip.show)
-    .on('mouseout', toolTip.hide);
+    .on('mouseover', function(d) {
+        toolTip.show(`${d[chosenXaxis]} ${d[chosenYaxis]}`, this);
+    })
+     .on('mouseout', function(d) {
+         toolTip.hide(`${d[chosenXaxis]} ${d[chosenYaxis]}`, this);
+     })
 
     // //mouse events
     // circlesGroup.on("mouseover", d => toolTip.show(d))
