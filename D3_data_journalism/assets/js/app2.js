@@ -35,7 +35,7 @@ var chartGroup = svg.append("g")
  var chosenXaxis = "poverty";
  var chosenYaxis = "healthcare";
 
-// //Update x-scale upon click on axis label
+//Update x-scale upon click on axis label
 function xScale(demData, chosenXaxis) {
     var xLinearSCale = d3.scaleLinear()
         .domain([d3.min(demData , d => parseFloat(d[chosenXaxis]) * .9), d3.max(demData, d => parseFloat(d[chosenXaxis]) *1.10)])
@@ -43,7 +43,7 @@ function xScale(demData, chosenXaxis) {
     return xLinearSCale;
 }
 
-    // //Update x-scale transition upon click on axis label
+//Update x-scale transition upon click on axis label
 function renderXAxes(newXScale, xAxis) {
     var bottomAxis = d3.axisBottom(newXScale);
 
@@ -54,20 +54,20 @@ function renderXAxes(newXScale, xAxis) {
     return xAxis;
 }
 
-     // //Update y-scale upon click on axis label
+//Update y-scale upon click on axis label
 function yScale(demData, chosenYaxis) {
     var yLinearSCale = d3.scaleLinear()
-        .domain([6, d3.max(demData, d => d[chosenYaxis])])
+        .domain([6, d3.max(demData, d => (d[chosenYaxis]))])
         .range([height, 0]);
             
     return yLinearSCale;
 }
 
-    // //Update y-scale transition upon click on axis label
+//Update y-scale transition upon click on axis label
 function renderYAxes(newYScale, yAxis) {
-    var leftAxis = d3.axisLeft(newYScale);
+    let leftAxis = d3.axisLeft(newYScale);
 
-    //   yAxis.transition()
+    //    yAxis.transition()
     //       .duration(1000)
     //       .call(leftAxis);
 
@@ -78,7 +78,7 @@ function renderYAxes(newYScale, yAxis) {
 function renderXCircles(circlesGroup, newXScale, chosenXaxis,) {
     circlesGroup.transition()
         .duration(1000)
-        .attr("cx", d => newXScale(d[chosenXaxis]))
+        .attr("cx", d => newXScale(d[chosenXaxis]));
 
     return circlesGroup;
 }
@@ -86,37 +86,52 @@ function renderXCircles(circlesGroup, newXScale, chosenXaxis,) {
 function renderYCircles(circlesGroup, newYScale, chosenYaxis,) {
     circlesGroup.transition()
         .duration(1000)
-        .attr("cy", d => newYScale(d[chosenYaxis]))
+        .attr("cy", d => newYScale(d[chosenYaxis]));
 
     return circlesGroup;
 }
 
 // Update ToolTip upon hover and axes 
 function updateToolTip(chosenXaxis, chosenYaxis, circlesGroup) {
-    
-    var xLabel;
+
+    //conditions for x-axis
         if (chosenXaxis === "poverty") {
-            xLabel = "In Poverty (%)";
+            var xLabel = "In Poverty: ";
         }
         else if (chosenXaxis === "age") {
-            xLabel = "Age (Median)";
+            var xLabel = "Age (Median): ";
         } 
-        else {xLabel = "Household Income (Median)";
+        else { var xLabel = "Household Income (Median): ";
         }
-
-    var yLabel;
+    //conditions for y-axis
         if (chosenYaxis === "obesity") {
-            yLabel = "Obese (%)";
+            var yLabel = "Obese: ";
         }
         else if (chosenYaxis === "smokes") {
-            yLabel = "Smokes (%)"
+            var yLabel = "Smokes: "
         }
-        else (yLabel = "Lacks Healthcare (%)")
-
+        else { var yLabel = "Lacks Healthcare: "}
+    
+    //define toolTip
     var toolTip = d3.tip()
+        .offset([120, -50])
         .attr("class", 'd3-tip')
-        .offset([20, 50])
-        .html(d => `${d[chosenXaxis]}<br> ${d[chosenYaxis]}`);
+        .html(function(d, i) {
+            //display age without format for x-axis
+            if (chosenXaxis ==="age") {
+                return (`${d.state} <br> ${xLabel} ${d[chosenXaxis]} <br> ${yLabel}${d[chosenYaxis]}%`);
+            }
+            //display income in dollars
+           else if (chosenXaxis !=="poverty" && chosenXaxis !=="age") {
+                return (`${d.state} <br> ${xLabel}$ ${d[chosenXaxis]} <br> ${yLabel}${d[chosenYaxis]}%`);
+           }
+           //display poverty as a percent
+           else {
+               return (`${d.state} <br> ${xLabel} ${d[chosenXaxis]}% <br> ${yLabel}${d[chosenYaxis]}%`);
+           }
+            
+        });
+        //  .html(d => `${d[chosenXaxis]}<br>${d[chosenYaxis]}`);
 
     circlesGroup.call(toolTip); 
 
@@ -131,8 +146,8 @@ function updateToolTip(chosenXaxis, chosenYaxis, circlesGroup) {
     return circlesGroup;
 };
 
-//////////////// STEP 3. IMPORT DATA /////////////////////
-//////////////////////////////////////////////////////////
+//////////////// STEP 3. IMPORT DATA AND APPEND GRAPH /////////////////////
+////////////////////////////////////////////////////////////////////////
     
     //import data
     var demData = d3.csv("assets/data/data.csv").then(demData => {
@@ -148,13 +163,13 @@ function updateToolTip(chosenXaxis, chosenYaxis, circlesGroup) {
         data.income = +data.income;
     });
 
-    // Define x linear scale function above csv import
+    // Define x linear scale function from above csv import
     var xLinearScale = xScale(demData, chosenXaxis);
 
-    // Define y linear scale function above csv import
+    // Define y linear scale function from above csv import
     var yLinearScale = yScale(demData, chosenYaxis);
 
-     // Create initial axis functions
+    // Create initial axis functions
     var bottomAxis = d3.axisBottom(xLinearScale);
     var leftAxis = d3.axisLeft(yLinearScale);
 
@@ -245,6 +260,10 @@ function updateToolTip(chosenXaxis, chosenYaxis, circlesGroup) {
         .classed("inactive", true)
         .text("Smokes (%)");
 
+////////// STEP 4. UPDATE TOOLTIP, AXES, CIRCLES, AND SCALE /////////////
+////////////////////////////////////////////////////////////////////////
+    
+
     // updates tooltip with new info
     var circlesGroup = updateToolTip(chosenXaxis, chosenYaxis, circlesGroup);
 
@@ -321,6 +340,8 @@ function updateToolTip(chosenXaxis, chosenYaxis, circlesGroup) {
         // replaces chosenXAxis with value
         chosenYaxis = yValue;
 
+        console.log(chosenYaxis);
+
         //update y scales with new data
         var yLinearScale = yScale(demData, chosenYaxis);
 
@@ -369,10 +390,6 @@ function updateToolTip(chosenXaxis, chosenYaxis, circlesGroup) {
                 .classed("active", true)
                 .classed("inactive", false);
             }
-
-    console.log(chosenYaxis);
-
-    
 
     }})
 
