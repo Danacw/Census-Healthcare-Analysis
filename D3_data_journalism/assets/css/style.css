@@ -10,7 +10,7 @@ a.navbar-brand{
 
 /* navbar styling*/
 .navbar{
-    background-color:rgb(0, 100, 84) !important;
+    background-color:rgb(0, 100, 84);
     padding-top:0px;
     padding-bottom: 0px;
     padding-right:40px;
@@ -20,6 +20,17 @@ a.navbar-brand{
 
 a.nav-item {
     color: whitesmoke;
+}
+
+h3 {
+  margin-left: 60px;
+  text-align: center;
+  font-family: new century schoolbook;
+}
+
+p {
+  margin-left: 60px;
+  font-family: new century schoolbook;
 }
 
 .iframeContainer {
@@ -32,17 +43,21 @@ a.nav-item {
     position: relative;
     min-height: 100%;
   }
-  
-  body {
-    /* Padding bottom by footer height */
-    padding-bottom: 80px;
+
+  .active {
+    font-size: 12pt;
   }
   
+  text {
+    font-size: 11pt;
+    font-family: new century schoolbook;
+  }
+
   #footer {
-    position: absolute;
+    position: relative;
     bottom: 0;
     width: 100%; /* Set the fixed height of the footer here */
-    height: 10px;
+    height: 2px;
     padding-top: 20px;
     padding-bottom: 40px;
     text-align: center;
