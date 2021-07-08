@@ -12,4 +12,4 @@ You can view the visualization here: https://danacw.github.io/D3-Challenge/D3_da
   - data.csv: the csv file with data from the US Census Bureau based on a 2014 American Community Survey (ACS).
 
 **D3_data_journalism/assets/js**
-  -app.js: the JavaScript file using the D3 library to add generate and add interactivity to the scatter plot.  
+  - app.js: the JavaScript file using the D3 library to add generate and add interactivity to the scatter plot.  
