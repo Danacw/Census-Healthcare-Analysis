@@ -1,6 +1,6 @@
 # D3-Challenge
 
-You can view the interactive visualization for this challenge here: https://danacw.github.io/D3-Challenge/D3_data_journalism/index.html
+You can view the interactive visualization for this challenge here: https://danacw.github.io/Census-Healthcare-Analysis/D3_data_journalism/index.html
 
 For this challenge, I used the D3 JavaScript library to generate an interactive scatter plot on healthcare data from the US Census. On the X axis age, household income, and poverty were analyzed against smoking rates, obesity, and healthcare on the Y axis. The user has the ability to filter through parameters to view correlations.
 
