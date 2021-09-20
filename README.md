@@ -1,4 +1,4 @@
-# D3-Challenge
+# US Census Healthcare Analysis
 
 You can view the interactive visualization for this challenge here: https://danacw.github.io/Census-Healthcare-Analysis/D3_data_journalism/index.html
 
